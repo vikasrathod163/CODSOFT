@@ -13,7 +13,6 @@ class Student implements Serializable {
         this.grade = grade;
     }
 
-    // Getter and Setter methods
 
     public int getRollNumber() {
         return rollNumber;
@@ -21,39 +20,59 @@ class Student implements Serializable {
 
     @Override
     public String toString() {
-        return "Name: " + name + ", Roll Number: " + rollNumber + ", Grade: " + grade;
+        return "\nName : " + name + "\nRoll Number : " + rollNumber + "\nGrade : " + grade+"\n";
     }
 }
 
 class StudentManagementSystem {
-    private ArrayList<Student> students = new ArrayList<>();
+    private static final int MAX_STUDENTS = 100;
+    private Student[] students = new Student[MAX_STUDENTS];
+    private int count = 0;
 
     public void addStudent(Student student) {
-        students.add(student);
+        if (count < MAX_STUDENTS) {
+            students[count++] = student;
+            System.out.println("Student added successfully.");
+        } else {
+            System.out.println("Cannot add more students. Maximum limit reached.");
+        }
     }
 
     public void removeStudent(int rollNumber) {
-        students.removeIf(student -> student.getRollNumber() == rollNumber);
+        for (int i = 0; i < count; i++) {
+            if (students[i].getRollNumber() == rollNumber) {
+                
+                // Move remaining elements to fill the gap
+                System.arraycopy(students, i + 1, students, i, count - i - 1);
+                count--;
+                System.out.println("Student removed successfully.");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
     }
 
     public Student searchStudent(int rollNumber) {
-        for (Student student : students) {
-            if (student.getRollNumber() == rollNumber) {
-                return student;
+        
+        for (int i = 0; i < count; i++) {
+            if (students[i].getRollNumber() == rollNumber) {
+                return students[i];
             }
         }
-        return null; // Not found
+        
+        return null; // if record not found.....
     }
 
     public void displayAllStudents() {
-        for (Student student : students) {
-            System.out.println(student);
+        for (int i = 0; i < count; i++) {
+            System.out.println(students[i]);
         }
     }
-
+    
     public void writeToFile(String fileName) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             oos.writeObject(students);
+            System.out.println("Data saved to file successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,62 +80,66 @@ class StudentManagementSystem {
 
     public void readFromFile(String fileName) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            students = (ArrayList<Student>) ois.readObject();
+            students = (Student[]) ois.readObject();
+            count = students.length;
+            System.out.println("Data loaded from file successfully.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 }
 
-public class Main {
+public class task_5{
     public static void main(String[] args) {
+        
         StudentManagementSystem system = new StudentManagementSystem();
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
         while (true) {
-            System.out.println("1. Add a new student");
-            System.out.println("2. Remove a student");
-            System.out.println("3. Search for a student");
-            System.out.println("4. Display all students");
-            System.out.println("5. Save data to file");
-            System.out.println("6. Load data from file");
-            System.out.println("7. Exit");
+            System.out.println(" | 1 : Add a new student    |");
+            System.out.println(" | 2 : Remove a student     |");
+            System.out.println(" | 3 : Search for a student |");
+            System.out.println(" | 4 : Display all student  |");
+            System.out.println(" | 5 : Save data to file    |");
+            System.out.println(" | 6 : Load data from file  |");
+            System.out.println(" | 7 : Exit                 |");
 
-            System.out.print("Enter your choice: ");
+            System.out.print("\t\t	Enter your choice : ");
 
             int choice;
             try {
-                choice = scanner.nextInt();
-            } catch (InputMismatchException e) {
+                choice = sc.nextInt();
+            }
+            catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Consume the invalid input
+                sc.nextLine();
                 continue;
             }
 
             switch (choice) {
                 case 1:
-                    // Add a new student
-                    System.out.print("Enter student name: ");
-                    String name = scanner.next();
-                    System.out.print("Enter roll number: ");
-                    int rollNumber = scanner.nextInt();
-                    System.out.print("Enter grade: ");
-                    String grade = scanner.next();
+                    
+                    System.out.print("Enter student name : ");
+                    String name = sc.next();
+                    System.out.print("Enter roll number : ");
+                    int rollNumber = sc.nextInt();
+                    System.out.print("Enter grade : ");
+                    String grade = sc.next();
 
                     system.addStudent(new Student(name, rollNumber, grade));
                     break;
 
                 case 2:
-                    // Remove a student
+                    
                     System.out.print("Enter roll number to remove: ");
-                    int rollToRemove = scanner.nextInt();
-                    system.removeStudent(rollToRemove);
+                    int rollno = sc.nextInt();
+                    system.removeStudent(rollno);
                     break;
 
                 case 3:
-                    // Search for a student
+                    
                     System.out.print("Enter roll number to search: ");
-                    int rollToSearch = scanner.nextInt();
+                    int rollToSearch = sc.nextInt();
                     Student foundStudent = system.searchStudent(rollToSearch);
                     if (foundStudent != null) {
                         System.out.println("Student found: " + foundStudent);
@@ -126,33 +149,32 @@ public class Main {
                     break;
 
                 case 4:
-                    // Display all students
+                    
                     system.displayAllStudents();
                     break;
-
-                case 5:
+				case 5:
                     // Save data to file
                     System.out.print("Enter file name to save data: ");
-                    String saveFileName = scanner.next();
+                    String saveFileName = sc.next();
                     system.writeToFile(saveFileName);
                     break;
 
                 case 6:
                     // Load data from file
                     System.out.print("Enter file name to load data: ");
-                    String loadFileName = scanner.next();
+                    String loadFileName = sc.next();
                     system.readFromFile(loadFileName);
                     break;
-
+                    
                 case 7:
-                    // Exit
+                   
                     System.out.println("Exiting the Student Management System.");
-                    scanner.close();
+                    sc.close();
                     System.exit(0);
                     break;
 
                 default:
-                    System.out.println("Invalid choice. Please enter a number between 1 and 7.");
+                    System.out.println("Invalid choice. Please enter a number between 1 and 5.");
             }
         }
     }
