@@ -82,6 +82,7 @@ class ATM{
                 case 4:
                     System.out.println("Exiting ATM. Thank you!");
                     flag = false;
+                    break;
                  
                 default:
                     System.out.println("Invalid choice. Please try again.");
