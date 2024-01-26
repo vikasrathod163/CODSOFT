@@ -53,6 +53,6 @@ public class task_1{
 		}
 
 		System.out.println("You have won " + wins + " Round out of " + round + " Rounds");
-
+		sc.close();
 	}
 }

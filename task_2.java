@@ -56,5 +56,6 @@ public class task_2{
 				System.out.println("Better Luck Next Time.....");
 			}
 		}
+		sc.close();
 	}
 }

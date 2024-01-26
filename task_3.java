@@ -89,6 +89,7 @@ class ATM{
                     
             }
         }
+        sc.close();
     }
 }
 
