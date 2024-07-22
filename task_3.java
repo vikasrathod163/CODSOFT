@@ -89,15 +89,15 @@ class ATM{
                     
             }
         }
-        sc.close();
+        
     }
 }
 
 public class task_3 {
     public static void main(String[] args) {
         
-        BankAccount user1 = new BankAccount(1000.0,"A");
-        BankAccount user2 = new BankAccount(600.0,"B");
+        BankAccount user1 = new BankAccount(1000.0,"User A");
+        BankAccount user2 = new BankAccount(600.0,"User B");
         ATM atm = new ATM(20000);
         
         atm.start(user1);
